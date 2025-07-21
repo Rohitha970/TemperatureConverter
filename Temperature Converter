@@ -1,0 +1,119 @@
+import java.util.Scanner;
+
+public class TemperatureConverterApp {
+
+    public static final String CYAN = "\u001B[36m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String RED = "\u001B[31m";
+    public static final String RESET = "\u001B[0m";
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+
+        printStyled("🌡️ Welcome to the Temperature Converter App", CYAN);
+        pause(800);
+
+        while (running) {
+            printMenu();
+            int choice = getIntInput(scanner, "➡️ Enter your choice (1-3): ");
+
+            switch (choice) {
+                case 1:
+                    double f = getDoubleInput(scanner, "🌡️ Enter temperature in Fahrenheit: ");
+                    double celsius = convertFtoC(f);
+                    printStyled("✅ " + f + "°F = " + round(celsius) + "°C", GREEN);
+                    break;
+                case 2:
+                    double c = getDoubleInput(scanner, "🌡️ Enter temperature in Celsius: ");
+                    double fahrenheit = convertCtoF(c);
+                    printStyled("✅ " + c + "°C = " + round(fahrenheit) + "°F", GREEN);
+                    break;
+                case 3:
+                    running = false;
+                    printStyled("👋 Exiting the app. Stay warm (or cool)!", YELLOW);
+                    break;
+                default:
+                    printStyled("❗ Invalid choice. Please choose 1, 2, or 3.", RED);
+            }
+
+            if (running) {
+                System.out.print("\n🔁 Do you want to convert again? (yes/no): ");
+                String again = scanner.next().toLowerCase();
+                if (!(again.equals("yes") || again.equals("y"))) {
+                    printStyled("👋 Exiting the app. Goodbye!", YELLOW);
+                    break;
+                }
+            }
+        }
+
+        scanner.close();
+    }
+
+    // Menu
+    public static void printMenu() {
+        System.out.println("\n📋 Choose Conversion Type:");
+        System.out.println("1. Fahrenheit to Celsius");
+        System.out.println("2. Celsius to Fahrenheit");
+        System.out.println("3. Exit");
+    }
+
+    // Conversion methods
+    public static double convertFtoC(double f) {
+        return (f - 32) * 5 / 9;
+    }
+
+    public static double convertCtoF(double c) {
+        return (c * 9 / 5) + 32;
+    }
+
+    // Input handlers
+    public static int getIntInput(Scanner scanner, String prompt) {
+        int num = -1;
+        boolean valid = false;
+        while (!valid) {
+            try {
+                System.out.print(prompt);
+                num = Integer.parseInt(scanner.next());
+                valid = true;
+            } catch (NumberFormatException e) {
+                printStyled("❗ Invalid input. Enter a number.", RED);
+            }
+        }
+        return num;
+    }
+
+    public static double getDoubleInput(Scanner scanner, String prompt) {
+        double num = 0;
+        boolean valid = false;
+        while (!valid) {
+            try {
+                System.out.print(prompt);
+                num = Double.parseDouble(scanner.next());
+                valid = true;
+            } catch (NumberFormatException e) {
+                printStyled("❗ Invalid input. Enter a valid decimal number.", RED);
+            }
+        }
+        return num;
+    }
+
+    // Utility
+    public static double round(double value) {
+        return Math.round(value * 100.0) / 100.0;
+    }
+
+    public static void printStyled(String message, String color) {
+        System.out.println(color + message + RESET);
+    }
+
+    public static void pause(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+a
